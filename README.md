@@ -259,8 +259,18 @@ This parameter defines the mating pool size of the population. The value of this
 
 > power
 
+This parameter represents the binary crossover probability. The parameter is set to 3 which determines that the binary crossover happens at a spefic value that is a mathematical operator  of the power variable. In the sense of the algorithm, it determines how different the children turn out from the parents.
+
 > probability
+
+This paramater determines the mutation probability of the algorithm. This value is sensitive and it was fine tuned to the value of 4 to make sure that the mutation creates enough diversity in the population, but not high enough to deviate from the actual answer. 
+
+Throughout the implementation of the algorithm, thr probability as increased from 4 to 7 and then again to 8 and reduced to 6 and 2. We observed the effects of these values on the fitness function and finally concluded the value to be equal 4 for a balance in the mutation.
 
 > no_of_children
 
+This parameter determines how many children and how many parents will be included in the mating pool in order to create the next generation. This parameter was set to 5 as it involved the appropriate number of children and also equal number of parents in order to nullify the negative effects of mutation. But the value also makes sure that there are enough number of children considered to make a significant change to the population.
+
 > num_generation
+
+This parameter determined the number of generations that the algorithm needs to run through to get to a decent level of fitness value. We initially set it to 10 to run and test the algorithm for a few generations with varied values of the above hyper parameters. Then we concluded the algorithm at 200 generations and set the num_generation parameter value to 200.

@@ -76,7 +76,7 @@ The basic structure of Genetic algorithm can be understood as:
 - apply crossover and mutation operators to generate new offsprings
 - offsprings replace the existing individuals in the population
 
-![Readme%20ba3c6a889bd844c0a99badd2846125a4/basic_structure.jpg](Readme%20ba3c6a889bd844c0a99badd2846125a4/basic_structure.jpg)
+![Images/basic_structure.jpg](Images/basic_structure.jpg)
 
 The algorithm is visually understood from the above image. A generalised pseudo-code for the same could be:
 

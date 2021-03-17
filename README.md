@@ -1,9 +1,23 @@
-# Genetic-algo
+# Readme
 
 Team members:
 
 1. Shri Vidhatri M M - 2019113006
 2. Anandhini Rajendran - 2019101055
+
+The requirements needed are :
+
+```python
+pip3 install requests
+pip3 install random
+pip3 install numpy
+```
+
+To run the genetic algorithm code, run
+
+```python
+python3 main.py
+```
 
 # Genetic algorithm
 
@@ -62,9 +76,9 @@ The basic structure of Genetic algorithm can be understood as:
 - apply crossover and mutation operators to generate new offsprings
 - offsprings replace the existing individuals in the population
 
-![Images/basic_structure.jpg](Images/basic_structure.jpg)
+![Readme%20ba3c6a889bd844c0a99badd2846125a4/basic_structure.jpg](Readme%20ba3c6a889bd844c0a99badd2846125a4/basic_structure.jpg)
 
-The algorithm is visually understood from the above image. A generaised psudo-code for the same could be:
+The algorithm is visually understood from the above image. A generalised pseudo-code for the same could be:
 
 ```python
 Genetic_Algorithm()
@@ -113,7 +127,73 @@ def fitness_calc_parent():
 
 The fitness function is calculated using the train and validation errors that were obtained from the server requests. The values ***a*** and ***b*** were varied to get a better idea of the errors. The values worked well since both the train errors and validation errors were large and a perfect balance among them enabled us to reduce them simultaneously.
 
-### Mating pool selection & crossover:
+### Crossover:
+
+```python
+def calculate_b():
+    x = random.uniform(0,1)
+    y = x-0.5
+    if(y>=0):
+        b = ((2*(1-x))**-1)**((power+1)**-1)
+    else:
+        b = (2*x)**((power+1)**-1)
+    return b
+
+def cross_over(parent_1,parent_2):
+    child_1 = []
+    child_2 = []
+    factor = calculate_b()
+    f1 = (factor+1)/2
+    f2 = (1 - factor)/2
+    for i in range(no_params):
+        child_1.append(parent_1[i]*f1 + parent_2[i]*f2)
+        child_2.append(parent_2[i]*f1 + parent_1[i]*f2)
+    return child_1,child_2
+```
+
+Crossover is analogous to reproduction and a biological crossover. 
+
+Here, more than one parent is chosen and one or more offsprings are produced using the information in the parents.
+
+The crossover probability is generally kept high as the fitness keeps increasing from one generation to the next in most cases.
+
+In our code, we have kept the crossover probabilty as 1 to ensure best fitness scenario.
+
+We have also found out by trial error that a binary crossover involving some level of randomness  with just two parents giving two children gives the best fitness in the children. This type of crossover is generally used in continuous search and is apt for the current dataset that we were given. This algorithm is found to be particularly useful in problems having multiple optimal solutions with a narrow global basin and in problems where the lower and upper bounds of the global optimum are not known. This type of search operator is very simular to the single point crossover.
+
+There exist many other crossovers such as partially mapped crossover, Davis' order crossover, multi point crossover, binary crossover, order based crossover, shuffle crossover and so on.
+
+### Mutation:
+
+Mutation is a random small change in the chromosome to get a new solution. It is mainly useful to create diversity in the solution pool and avoid hgetting stuck at local minima.
+
+The probability of mutation has been kept to 4/11 in our code, and the randomness created in such individuals has been varied and arrived at a conclusive value to attain maximum amount of diverse pool.
+
+There are many different kinds of mutation operators used to implement mutations and most of them are inspired from natural mutation methodologies
+
+```python
+def mutation(vector):
+    for i in range(no_params):
+        prob = random.randint(1,11)
+        
+        if(prob<probability):
+            if abs(vector[i]*random.uniform(0.95,1.05))<=10 :
+                if vector[i] ==  0 : 
+                    vector[i] = random.uniform(-0.05,0.05)
+                else:
+                    vector[i] = vector[i]*random.uniform(0.95,1.05)
+            else : 
+                vector[i] = random.uniform(-1,1)
+    return vector
+```
+
+In our genetic algorithm, we have used arithmetic mutation operators to track the changes done by the mutation operator.
+
+We have added a small random value to any zero valued gene, and we have multiplied the genes randmly by a value between (p,q).
+
+We have varied (p,q) from (-0.05,0.05) to (-5,5) and almost 10 different combinations in between and found by trial and error that the code gives best fitness when the multiplication operator (p,q) of value (0.95,1.05) gives the best possible fitness of subsequent individuals.
+
+### Mating pool Selection:
 
 Mating pool selection for selecting parents of the next generations can be done in various ways.
 
@@ -140,4 +220,47 @@ def create_child_array():
 
 In this genetic algorithm code, we have written, we have chosen the rank selection algorithm which was fast and effective.
 
-In this kind of mating pool selection, we have sorted the fitness of all the prospective parents ( a combination of previous generation parents and children) and
+In this kind of mating pool selection, we have sorted the fitness of all the prospective parents ( a combination of previous generation parents and children) , and then we have chosen the best x children and best population_size - x parents among which the mating pairs are chosen randomly.
+
+After the parents are chosen, crossover is done over them and the children are mutated to make the best possible use of the diverse pool of data.
+
+## Hyperparameters:
+
+```python
+no_params = 11  #no of parameters
+a = 1           #factor to multiply with t_error
+b = 1           #factor to multiply with v_error
+population_size = 10
+size = (population_size,no_params)  #size of population vector
+power = 3
+probability = 4    #probability for mutation between 1 and 11
+no_of_children = 5  #no of parents to be mated
+parents_in_generation = 10 #no of parents taken from parent array
+num_generation = 10
+```
+
+> no_params
+
+This parameter describes the number of genes in an individual i.e. the number of vectors in a solution. This value is set to 11 according to the question
+
+> a & b
+
+These variables describe the coefficients of train and validation errors in the fitness function. These values 1,1 were found to be appropriate for these parameters
+
+> population_size
+
+We started out with the value of 10 for population size and soon realised that that specific value was effective to analyse the fitness as it was not too less to hinder crossovers and it was not too high to slow down the genetic algorithm.
+
+This parameter has been set to a value of 10.
+
+> parents_in_generation
+
+This parameter defines the mating pool size of the population. The value of this parameter has been kept as 10 i.e. equal to population_size to keep the generation numbers under check for the efficiency of the code.
+
+> power
+
+> probability
+
+> no_of_children
+
+> num_generation
